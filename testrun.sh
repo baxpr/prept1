@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 docker run \
-    --mount type=bind,src=freesurfer_license.txt,dst=/usr/local/freesurfer/license.txt \
+    --mount type=bind,src=`pwd -P`/freesurfer_license.txt,dst=/usr/local/freesurfer/license.txt \
     --mount type=bind,src=`pwd -P`/INPUTS,dst=/INPUTS \
     --mount type=bind,src=`pwd -P`/OUTPUTS,dst=/OUTPUTS \
     -e DISPLAY=host.docker.internal:0 \
