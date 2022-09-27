@@ -17,3 +17,5 @@ fslmaths INPUTS/mprage1 -add OUTPUTS/rmprage2 -add OUTPUTS/rmprage3 -div 3 OUTPU
 flirt -usesqform -cost mutualinfo -in INPUTS/pd -ref OUTPUTS/mrmprage -out OUTPUTS/rpd
 
 fslmaths OUTPUTS/rpd -s 10 OUTPUTS/srpd
+
+fslmaths OUTPUTS/mrmprage -div OUTPUTS/srpd OUTPUTS/smrmprage

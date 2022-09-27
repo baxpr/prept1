@@ -4,7 +4,8 @@ docker run \
     --mount type=bind,src=`pwd -P`/freesurfer_license.txt,dst=/usr/local/freesurfer/license.txt \
     --mount type=bind,src=`pwd -P`/INPUTS,dst=/INPUTS \
     --mount type=bind,src=`pwd -P`/OUTPUTS,dst=/OUTPUTS \
+    --mount type=bind,src=`pwd -P`/OUTPUTS2,dst=/OUTPUTS2 \
     -e DISPLAY=host.docker.internal:0 \
     baxterprogers/freesurfer720:v2.0.0 \
-    --t1_niigz /OUTPUTS/mrmprage.nii.gz \
-    --out_dir /OUTPUTS
+    --t1_niigz /OUTPUTS/smrmprage.nii.gz \
+    --out_dir /OUTPUTS2
