@@ -19,5 +19,8 @@ docker run -it \
     --entrypoint bash \
     baxterprogers/freesurfer720:v2.0.0
 
-#    recon-all -watershed atlas -autorecon1 -sd /OUTPUTS -s MRMPRAGE -i /OUTPUTS/mrmprage.nii.gz
-#    recon-all -watershed atlas -autorecon1 -sd /OUTPUTS -s SMRMPRAGE -i /OUTPUTS/smrmprage.nii.gz
+# Manual procedure in docker:
+#recon-all -watershed atlas -autorecon1 -sd /OUTPUTS -s MRMPRAGE -i /OUTPUTS/mrmprage.nii.gz
+#recon-all -autorecon2 -sd /OUTPUTS -s MRMPRAGE
+#recon-all -autorecon3 -sd /OUTPUTS -s MRMPRAGE
+#segmentHA_T1.sh -sd /OUTPUTS -s MRMPRAGE
