@@ -23,4 +23,4 @@ docker run -it \
 #recon-all -watershed atlas -autorecon1 -sd /OUTPUTS -s MRMPRAGE -i /OUTPUTS/mrmprage.nii.gz
 #recon-all -autorecon2 -sd /OUTPUTS -s MRMPRAGE
 #recon-all -autorecon3 -sd /OUTPUTS -s MRMPRAGE
-#segmentHA_T1.sh -sd /OUTPUTS -s MRMPRAGE
+#segmentHA_T1.sh MRMPRAGE /OUTPUTS
