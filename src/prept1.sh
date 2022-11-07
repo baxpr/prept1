@@ -80,7 +80,7 @@ flirt \
 echo Smooth PD
 fslmaths rpd -s ${fwhm} srpd
 
-# Scale the t1 by PDF
+# Scale the t1 by PD
 echo Compute scaled mean T1
 fslmaths mrt1 -div srpd smrt1
 
