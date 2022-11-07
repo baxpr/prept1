@@ -2,10 +2,13 @@
 #
 # Pipeline entrypoint for 7T hi-res T1 registration and scaling
 
+# ./prept1.sh --out_dir ../OUTPUTS --pd_niigz ../INPUTS/pd.nii.gz --t1_niigzs ../INPUTS/mprage1.nii.gz ../INPUTS/mprage2.nii.gz ../INPUTS/mprage3.nii.gz
+
 # Initialize defaults for input parameters
 export t1_niigzs=/INPUTS/t1.nii.gz
 export pd_niigz=/INPUTS/pd.nii.gz
 export out_dir=/OUTPUTS
+export fwhm=10
 
 # Parse input options. Bit of extra gymnastics to allow multiple files
 # listed after --t1_niigzs - these are put into the array t1_list
@@ -15,6 +18,7 @@ while [[ $# -gt 0 ]]; do
     case $key in      
         --pd_niigz)        export pd_niigz="$2";        shift; shift ;;
         --out_dir)         export out_dir="$2";         shift; shift ;;
+        --fwhm)            export fwhm="$2";            shift; shift ;;
         --t1_niigzs)
             next="$2"
             while ! [[ "$next" =~ -.* ]] && [[ $# > 1 ]]; do
@@ -30,6 +34,7 @@ done
 num_t1=${#t1_list[@]}
 echo "PD: $pd_niigz"
 echo "T1s (${num_t1}): ${t1_list[@]}"
+echo "FWHM: ${fwhm}"
 
 # Work in output dir
 cd "${out_dir}"
@@ -43,25 +48,27 @@ for t1 in ${t1_list[@]} ; do
 done
 
 # Register all other T1s to the first
-cp t1_1.nii.gz rt1_1.nii.gz
+mv t1_1.nii.gz rt1_1.nii.gz
 for n in $(seq 2 $num_t1) ; do
-    echo Registering ${n} to 1
+    echo Register ${n} to 1
     flirt \
         -usesqform \
-        -ref t1_1 \
+        -ref rt1_1 \
         -in t1_${n} \
         -out rt1_${n}
 done
 
 # Compute mean T1
-cmd="fslmaths t1_1"
+echo Compute mean T1
+cmd="fslmaths rt1_1"
 for n in $(seq 2 $num_t1) ; do
-    cmd+=" -add t1_${n}"
+    cmd+=" -add rt1_${n}"
 done
 cmd+=" -div ${n} mrt1"
 eval $cmd
 
 # Register PD to the mean T1
+echo Register PD to mean T1
 flirt \
     -cost mutualinfo \
     -usesqform \
@@ -70,8 +77,10 @@ flirt \
     -out rpd
 
 # Smooth the PD
-fslmaths rpd -s 10 srpd
+echo Smooth PD
+fslmaths rpd -s ${fwhm} srpd
 
 # Scale the t1 by PDF
+echo Compute scaled mean T1
 fslmaths mrt1 -div srpd smrt1
 
