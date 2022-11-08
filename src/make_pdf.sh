@@ -28,7 +28,7 @@ convert \
     -gravity center \( mrt1.png -resize 1000 -geometry +0-200 \) -composite \
     -gravity center \( smrt1.png -resize 1000 -geometry +0+200 \) -composite \
     -gravity North -pointsize 48 -annotate +0+200 \
-        "Mean T1 (top) and scaled by PD (bottom)" \
+        "Mean of ${num_t1} T1s (top) and scaled by PD (bottom)" \
     prept1.pdf
 
 

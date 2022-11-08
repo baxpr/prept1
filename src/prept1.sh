@@ -32,7 +32,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-num_t1=${#t1_list[@]}
+export num_t1=${#t1_list[@]}
 echo "PD: $pd_niigz"
 echo "T1s (${num_t1}): ${t1_list[@]}"
 echo "FWHM: ${fwhm}"
@@ -50,23 +50,29 @@ done
 
 # Register all other T1s to the first
 mv t1_1.nii.gz rt1_1.nii.gz
-for n in $(seq 2 $num_t1) ; do
-    echo Register ${n} to 1
-    flirt \
-        -usesqform \
-        -ref rt1_1 \
-        -in t1_${n} \
-        -out rt1_${n}
-done
+if [[ "$num_t1" > 1 ]]; then
+    for n in $(seq 2 $num_t1) ; do
+        echo Register ${n} to 1
+        flirt \
+            -usesqform \
+            -ref rt1_1 \
+            -in t1_${n} \
+            -out rt1_${n}
+    done
+fi
 
 # Compute mean T1
 echo Compute mean T1
-cmd="fslmaths rt1_1"
-for n in $(seq 2 $num_t1) ; do
-    cmd+=" -add rt1_${n}"
-done
-cmd+=" -div ${n} mrt1"
-eval $cmd
+if [[ "$num_t1" == 1 ]]; then
+    mv rt1_1.nii.gz mrt1.nii.gz
+else
+    cmd="fslmaths rt1_1"
+    for n in $(seq 2 $num_t1) ; do
+        cmd+=" -add rt1_${n}"
+    done
+    cmd+=" -div ${n} mrt1"
+    eval $cmd
+fi
 
 # Register PD to the mean T1
 echo Register PD to mean T1
