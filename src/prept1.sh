@@ -2,6 +2,7 @@
 #
 # Pipeline entrypoint for 7T hi-res T1 registration and scaling
 
+# For testing:
 # ./prept1.sh --out_dir ../OUTPUTS --pd_niigz ../INPUTS/pd.nii.gz --t1_niigzs ../INPUTS/mprage1.nii.gz ../INPUTS/mprage2.nii.gz ../INPUTS/mprage3.nii.gz
 
 # Initialize defaults for input parameters
@@ -83,4 +84,7 @@ fslmaths rpd -s ${fwhm} srpd
 # Scale the t1 by PD
 echo Compute scaled mean T1
 fslmaths mrt1 -div srpd smrt1
+
+# Make QC PDF
+make_pdf.sh
 
